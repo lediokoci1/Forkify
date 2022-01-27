@@ -529,6 +529,8 @@ var _regeneratorRuntime = require("regenerator-runtime");
 var _stable = require("core-js/stable");
 var _resultsViewJs = require("./views/resultsView.js");
 var _resultsViewJsDefault = parcelHelpers.interopDefault(_resultsViewJs);
+var _paginationViewJs = require("./views/paginationView.js");
+var _paginationViewJsDefault = parcelHelpers.interopDefault(_paginationViewJs);
 if (module.hot) module.hot.accept();
 const controlRecipes = async function() {
     try {
@@ -553,6 +555,7 @@ const controllSearchResult = async function() {
         await _modelJs.loadSearchResults(query);
         // Rendering results of search:
         _resultsViewJsDefault.default.render(_modelJs.getSearchResultPage());
+        _paginationViewJsDefault.default.render(_modelJs.state.search);
     } catch (err) {
         console.log(err);
     }
@@ -563,7 +566,7 @@ const init = function() {
 };
 init();
 
-},{"./views/recipeView.js":"82pEw","./views/searchView.js":"jcq1q","./model.js":"1pVJj","regenerator-runtime":"1EBPE","core-js/stable":"95FYz","./views/resultsView.js":"5peDB","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"82pEw":[function(require,module,exports) {
+},{"./views/recipeView.js":"82pEw","./views/searchView.js":"jcq1q","./model.js":"1pVJj","regenerator-runtime":"1EBPE","core-js/stable":"95FYz","./views/resultsView.js":"5peDB","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","./views/paginationView.js":"2PAUD"}],"82pEw":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _viewJs = require("./View.js");
@@ -14033,6 +14036,27 @@ class ResultsView extends _viewJsDefault.default {
 }
 exports.default = new ResultsView();
 
-},{"./View.js":"9dvKv","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}]},["19Ls1","lA0Es"], "lA0Es", "parcelRequire23d4")
+},{"./View.js":"9dvKv","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"2PAUD":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+class PaginationView extends _viewDefault.default {
+    _parentElement = document.querySelector('.pagination');
+    _generateMarkup() {
+        const numPages = Math.ceil(this._data.result.length / this._data.resultsPerPage);
+        // Faqa e pare
+        if (this._data.page === 1 && numPages > 1) return 'page1 , ....';
+        // Faqa e fundit:
+        if (this._data.page === numPages && numPages > 1) return 'last page';
+        // Faqe te tjera
+        if (this._data.page < numPages) return '...';
+    }
+}
+exports.default = new PaginationView();
+
+},{"./View":"9dvKv","url:../../img/icons.svg":"5jwFy","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}]},["19Ls1","lA0Es"], "lA0Es", "parcelRequire23d4")
 
 //# sourceMappingURL=index.05cf099e.js.map

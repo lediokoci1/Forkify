@@ -4,7 +4,7 @@ import * as model from './model.js';
 import 'regenerator-runtime';
 import 'core-js/stable';
 import resultsView from './views/resultsView.js';
-
+import paginationView from './views/paginationView.js';
 if (module.hot) {
   module.hot.accept();
 }
@@ -34,6 +34,7 @@ const controllSearchResult = async function () {
     await model.loadSearchResults(query);
     // Rendering results of search:
     resultsView.render(model.getSearchResultPage());
+    paginationView.render(model.state.search);
   } catch (err) {
     console.log(err);
   }
