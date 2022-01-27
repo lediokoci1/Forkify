@@ -25,22 +25,24 @@ const controlRecipes = async function () {
 
 const controllSearchResult = async function () {
   try {
-    console.log('Ledio');
     resultsView.renderSpinner();
-
     const query = searchView.getQueryInput();
     console.log(query);
     if (!query) return;
     await model.loadSearchResults(query);
     // Rendering results of search:
-    resultsView.render(model.getSearchResultPage());
+    resultsView.render(model.getSearchResultPage(2));
     paginationView.render(model.state.search);
   } catch (err) {
-    console.log(err);
+    throw err;
   }
+};
+const controlPagination = function () {
+  console.log('Pagination controller');
 };
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
   searchView.addHandlerSearch(controllSearchResult);
+  paginationView.addHandlerClick(controlPagination);
 };
 init();

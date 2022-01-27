@@ -7,7 +7,7 @@ export const state = {
     input: '',
     result: [],
     resultsPerPage: RES_PER_PAGE,
-    page: 2,
+    page: 0,
   },
 };
 export const loadRecipe = async function (id) {
@@ -49,9 +49,8 @@ export const loadSearchResults = async function (input) {
 };
 
 export const getSearchResultPage = function (page = state.search.page) {
-  console.log(state.search.result, 'state.search.result');
   state.search.page = page;
-
+  console.log(state.search.page);
   const start = (state.search.page - 1) * state.search.resultsPerPage;
   const end = state.search.page * state.search.resultsPerPage;
   console.log(start, end);

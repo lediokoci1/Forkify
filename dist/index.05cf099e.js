@@ -547,26 +547,29 @@ const controlRecipes = async function() {
 };
 const controllSearchResult = async function() {
     try {
-        console.log('Ledio');
         _resultsViewJsDefault.default.renderSpinner();
         const query = _searchViewJsDefault.default.getQueryInput();
         console.log(query);
         if (!query) return;
         await _modelJs.loadSearchResults(query);
         // Rendering results of search:
-        _resultsViewJsDefault.default.render(_modelJs.getSearchResultPage());
+        _resultsViewJsDefault.default.render(_modelJs.getSearchResultPage(2));
         _paginationViewJsDefault.default.render(_modelJs.state.search);
     } catch (err) {
-        console.log(err);
+        throw err;
     }
+};
+const controlPagination = function() {
+    console.log('Pagination controller');
 };
 const init = function() {
     _recipeViewJsDefault.default.addHandlerRender(controlRecipes);
     _searchViewJsDefault.default.addHandlerSearch(controllSearchResult);
+    _paginationViewJsDefault.default.addHandlerClick(controlPagination);
 };
 init();
 
-},{"./views/recipeView.js":"82pEw","./views/searchView.js":"jcq1q","./model.js":"1pVJj","regenerator-runtime":"1EBPE","core-js/stable":"95FYz","./views/resultsView.js":"5peDB","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","./views/paginationView.js":"2PAUD"}],"82pEw":[function(require,module,exports) {
+},{"./views/recipeView.js":"82pEw","./views/searchView.js":"jcq1q","./model.js":"1pVJj","regenerator-runtime":"1EBPE","core-js/stable":"95FYz","./views/resultsView.js":"5peDB","./views/paginationView.js":"2PAUD","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"82pEw":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _viewJs = require("./View.js");
@@ -877,7 +880,7 @@ const state = {
         input: '',
         result: [],
         resultsPerPage: _configJs.RES_PER_PAGE,
-        page: 2
+        page: 0
     }
 };
 const loadRecipe = async function(id) {
@@ -915,8 +918,8 @@ const loadSearchResults = async function(input) {
     }
 };
 const getSearchResultPage = function(page = state.search.page) {
-    console.log(state.search.result, 'state.search.result');
     state.search.page = page;
+    console.log(state.search.page);
     const start = (state.search.page - 1) * state.search.resultsPerPage;
     const end = state.search.page * state.search.resultsPerPage;
     console.log(start, end);
@@ -14045,17 +14048,53 @@ var _iconsSvg = require("url:../../img/icons.svg");
 var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 class PaginationView extends _viewDefault.default {
     _parentElement = document.querySelector('.pagination');
+    addHandlerClick(handler) {
+        this._parentElement.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn--inline');
+            console.log(btn);
+            handler();
+        });
+    }
     _generateMarkup() {
+        const currentPage = this._data.page;
         const numPages = Math.ceil(this._data.result.length / this._data.resultsPerPage);
-        // Faqa e pare
-        if (this._data.page === 1 && numPages > 1) return 'page1 , ....';
-        // Faqa e fundit:
-        if (this._data.page === numPages && numPages > 1) return 'last page';
+        // Faqa e fPare
+        if (currentPage === 1 && numPages > 1) return `
+            <button class="btn--inline pagination__btn--next">
+            <span>Page${currentPage + 1}</span>
+            <svg class="search__icon">
+              <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>
+            </svg>
+          </button>
+            `;
+        if (currentPage === numPages && numPages > 1) return `<button class="btn--inline      pagination__btn--prev">
+            <svg class="search__icon">
+              <use href="${_iconsSvgDefault.default}#icon-arrow-left"></use>
+            </svg>
+            <span>Page ${currentPage}</span>
+          </button>
+        </button>
+   `;
         // Faqe te tjera
-        if (this._data.page < numPages) return '...';
+        if (currentPage < numPages) return `<button class="btn--inline pagination__btn--prev">
+      <svg class="search__icon">
+        <use href="${_iconsSvgDefault.default}#icon-arrow-left"></use>
+      </svg>
+      <span>Page ${currentPage}</span>
+    </button>
+    <button class="btn--inline pagination__btn--next">
+    <span>Page${currentPage + 1}</span>
+    <svg class="search__icon">
+      <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>
+    </svg>
+  </button>`;
+        return '';
     }
 }
-exports.default = new PaginationView();
+exports.default = new PaginationView(); /*
+
+
+*/ 
 
 },{"./View":"9dvKv","url:../../img/icons.svg":"5jwFy","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}]},["19Ls1","lA0Es"], "lA0Es", "parcelRequire23d4")
 
