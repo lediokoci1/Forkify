@@ -7,7 +7,7 @@ export const state = {
     input: '',
     result: [],
     resultsPerPage: RES_PER_PAGE,
-    page: 0,
+    page: 1,
   },
 };
 export const loadRecipe = async function (id) {
@@ -35,6 +35,7 @@ export const loadSearchResults = async function (input) {
     const data = await getJSON(
       `https://forkify-api.herokuapp.com/api/search?q=${input}`
     );
+    state.search.page = 1;
     state.search.result = data.recipes.map(rec => {
       return {
         id: rec.recipe_id,
@@ -44,15 +45,13 @@ export const loadSearchResults = async function (input) {
       };
     });
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 };
 
 export const getSearchResultPage = function (page = state.search.page) {
   state.search.page = page;
-  console.log(state.search.page);
   const start = (state.search.page - 1) * state.search.resultsPerPage;
   const end = state.search.page * state.search.resultsPerPage;
-  console.log(start, end);
   return state.search.result.slice(start, end);
 };

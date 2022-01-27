@@ -549,18 +549,18 @@ const controllSearchResult = async function() {
     try {
         _resultsViewJsDefault.default.renderSpinner();
         const query = _searchViewJsDefault.default.getQueryInput();
-        console.log(query);
         if (!query) return;
         await _modelJs.loadSearchResults(query);
         // Rendering results of search:
-        _resultsViewJsDefault.default.render(_modelJs.getSearchResultPage(2));
+        _resultsViewJsDefault.default.render(_modelJs.getSearchResultPage());
         _paginationViewJsDefault.default.render(_modelJs.state.search);
     } catch (err) {
         throw err;
     }
 };
-const controlPagination = function() {
-    console.log('Pagination controller');
+const controlPagination = function(goToPage) {
+    _resultsViewJsDefault.default.render(_modelJs.getSearchResultPage(goToPage));
+    _paginationViewJsDefault.default.render(_modelJs.state.search);
 };
 const init = function() {
     _recipeViewJsDefault.default.addHandlerRender(controlRecipes);
@@ -880,7 +880,7 @@ const state = {
         input: '',
         result: [],
         resultsPerPage: _configJs.RES_PER_PAGE,
-        page: 0
+        page: 1
     }
 };
 const loadRecipe = async function(id) {
@@ -905,6 +905,7 @@ const loadSearchResults = async function(input) {
     try {
         state.search.input = input;
         const data = await _helpersJs.getJSON(`https://forkify-api.herokuapp.com/api/search?q=${input}`);
+        state.search.page = 1;
         state.search.result = data.recipes.map((rec)=>{
             return {
                 id: rec.recipe_id,
@@ -914,15 +915,13 @@ const loadSearchResults = async function(input) {
             };
         });
     } catch (err) {
-        console.log(err);
+        throw err;
     }
 };
 const getSearchResultPage = function(page = state.search.page) {
     state.search.page = page;
-    console.log(state.search.page);
     const start = (state.search.page - 1) * state.search.resultsPerPage;
     const end = state.search.page * state.search.resultsPerPage;
-    console.log(start, end);
     return state.search.result.slice(start, end);
 };
 
@@ -963,7 +962,7 @@ const getJSON = async function(url) {
         if (!res.ok) throw new Error(`${data.message}(${res.status})`);
         return data;
     } catch (err) {
-        console.log(err);
+        throw err;
     }
 };
 
@@ -14051,38 +14050,40 @@ class PaginationView extends _viewDefault.default {
     addHandlerClick(handler) {
         this._parentElement.addEventListener('click', function(e) {
             const btn = e.target.closest('.btn--inline');
-            console.log(btn);
-            handler();
+            if (!btn) return;
+            const goToPage = +btn.dataset.goto; // equal with Number(btn.dataset.goto)
+            handler(goToPage);
         });
     }
     _generateMarkup() {
         const currentPage = this._data.page;
         const numPages = Math.ceil(this._data.result.length / this._data.resultsPerPage);
-        // Faqa e fPare
+        // Faqa e Pare
         if (currentPage === 1 && numPages > 1) return `
-            <button class="btn--inline pagination__btn--next">
+            <button data-goto='${currentPage + 1}' class="btn--inline pagination__btn--next">
             <span>Page${currentPage + 1}</span>
             <svg class="search__icon">
               <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>
             </svg>
           </button>
             `;
-        if (currentPage === numPages && numPages > 1) return `<button class="btn--inline      pagination__btn--prev">
+        // Faqa e Fundit
+        if (currentPage === numPages && numPages > 1) return `<button data-goto='${currentPage - 1}' class="btn--inline pagination__btn--prev">
             <svg class="search__icon">
               <use href="${_iconsSvgDefault.default}#icon-arrow-left"></use>
             </svg>
-            <span>Page ${currentPage}</span>
+            <span>Page ${currentPage - 1}</span>
           </button>
         </button>
    `;
         // Faqe te tjera
-        if (currentPage < numPages) return `<button class="btn--inline pagination__btn--prev">
+        if (currentPage < numPages) return `<button data-goto='${currentPage - 1}' class="btn--inline pagination__btn--prev">
       <svg class="search__icon">
         <use href="${_iconsSvgDefault.default}#icon-arrow-left"></use>
       </svg>
-      <span>Page ${currentPage}</span>
+      <span>Page ${currentPage - 1}</span>
     </button>
-    <button class="btn--inline pagination__btn--next">
+    <button data-goto='${currentPage + 1}' class="btn--inline pagination__btn--next">
     <span>Page${currentPage + 1}</span>
     <svg class="search__icon">
       <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>
@@ -14091,10 +14092,7 @@ class PaginationView extends _viewDefault.default {
         return '';
     }
 }
-exports.default = new PaginationView(); /*
-
-
-*/ 
+exports.default = new PaginationView();
 
 },{"./View":"9dvKv","url:../../img/icons.svg":"5jwFy","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}]},["19Ls1","lA0Es"], "lA0Es", "parcelRequire23d4")
 
