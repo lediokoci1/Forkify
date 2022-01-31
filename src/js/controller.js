@@ -40,9 +40,19 @@ const controlPagination = function (goToPage) {
   resultsView.render(model.getSearchResultPage(goToPage));
   paginationView.render(model.state.search);
 };
+
+const controlServings = function (newServings) {
+  // Perditesojme perberesit e recetes ne State
+  model.updateServings(newServings);
+  // Perditesojme View e recetes
+  recipeView.render(model.state.recipe);
+};
+
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
+  recipeView._addHandlerUpdateServings(controlServings);
   searchView.addHandlerSearch(controllSearchResult);
   paginationView.addHandlerClick(controlPagination);
+  recipeView.render(model.state.recipe);
 };
 init();

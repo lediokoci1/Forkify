@@ -562,10 +562,18 @@ const controlPagination = function(goToPage) {
     _resultsViewJsDefault.default.render(_modelJs.getSearchResultPage(goToPage));
     _paginationViewJsDefault.default.render(_modelJs.state.search);
 };
+const controlServings = function(newServings) {
+    // Perditesojme perberesit e recetes ne State
+    _modelJs.updateServings(newServings);
+    // Perditesojme View e recetes
+    _recipeViewJsDefault.default.render(_modelJs.state.recipe);
+};
 const init = function() {
     _recipeViewJsDefault.default.addHandlerRender(controlRecipes);
+    _recipeViewJsDefault.default._addHandlerUpdateServings(controlServings);
     _searchViewJsDefault.default.addHandlerSearch(controllSearchResult);
     _paginationViewJsDefault.default.addHandlerClick(controlPagination);
+    _recipeViewJsDefault.default.render(_modelJs.state.recipe);
 };
 init();
 
@@ -633,7 +641,18 @@ class RecipeView extends _viewJsDefault.default {
         ].forEach((ev)=>window.addEventListener(ev, handler)
         );
     }
+    _addHandlerUpdateServings(handler) {
+        this._parentElement.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn--update-servings');
+            if (!btn) return;
+            const updateTo = +btn.dataset.updateTo; // Shpjegim me poshte
+            // kur ne nje klase kemi dataset-update-to => {update-to = updateTo} 'camelCase'
+            console.log(updateTo);
+            handler(updateTo);
+        });
+    }
     _generateMarkup() {
+        if (!this._data.ingredients) return;
         return `<figure class="recipe__fig">
     <img src="${this._data.image}" alt="Tomato" class="recipe__img" />
     <h1 class="recipe__title">
@@ -653,16 +672,16 @@ class RecipeView extends _viewJsDefault.default {
       <svg class="recipe__info-icon">
         <use href="${_iconsSvgDefault.default}#icon-users"></use>
       </svg>
-      <span class="recipe__info-data recipe__info-data--people">4</span>
+      <span class="recipe__info-data recipe__info-data--people">${this._data.servings}</span>
       <span class="recipe__info-text">servings</span>
 
       <div class="recipe__info-buttons">
-        <button class="btn--tiny btn--increase-servings">
+        <button data-update-to='${this._data.servings - 1}'class="btn--tiny btn--update-servings ">
           <svg>
             <use href="${_iconsSvgDefault.default}#icon-minus-circle"></use>
           </svg>
         </button>
-        <button class="btn--tiny btn--increase-servings">
+        <button data-update-to='${this._data.servings + 1}' class="btn--tiny btn--update-servings "> 
           <svg>
             <use href="${_iconsSvgDefault.default}#icon-plus-circle"></use>
           </svg>
@@ -682,7 +701,8 @@ class RecipeView extends _viewJsDefault.default {
   <div class="recipe__ingredients">
     <h2 class="heading--2">Recipe ingredients</h2>
     <ul class="recipe__ingredient-list">
-      ${this._data.ingredients.map(this._generateMarkupIngredient).join('')}
+      ${this._data.ingredients.map((ingredient)=>this._generateMarkupIngredient(ingredient)
+        ).join('')}
       </ul>
       
   </div>
@@ -871,10 +891,13 @@ parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults
 );
 parcelHelpers.export(exports, "getSearchResultPage", ()=>getSearchResultPage
 );
+parcelHelpers.export(exports, "updateServings", ()=>updateServings
+);
 var _configJs = require("./config.js");
 var _helpersJs = require("./helpers.js");
 const state = {
     recipe: {
+        servings: 4
     },
     search: {
         input: '',
@@ -886,6 +909,7 @@ const state = {
 const loadRecipe = async function(id) {
     try {
         const data = await _helpersJs.getJSON(`${_configJs.API_URL}${id}`);
+        console.log(data);
         const { recipe  } = data;
         state.recipe = {
             id: recipe.recipe_id,
@@ -893,7 +917,7 @@ const loadRecipe = async function(id) {
             publisher: recipe.publisher,
             sourceUrl: recipe.source_url,
             image: recipe.image_url,
-            servings: recipe.servings,
+            servings: 4,
             cookingTime: recipe.cooking_time,
             ingredients: recipe.ingredients
         };
@@ -923,6 +947,11 @@ const getSearchResultPage = function(page = state.search.page) {
     const start = (state.search.page - 1) * state.search.resultsPerPage;
     const end = state.search.page * state.search.resultsPerPage;
     return state.search.result.slice(start, end);
+};
+const updateServings = function(newServings) {
+    state.recipe.ingredients = state.recipe.ingredients.map((ing)=>`${newServings / state.recipe.servings}( ${ing} )`
+    );
+    state.recipe.servings = newServings;
 };
 
 },{"./config.js":"6V52N","./helpers.js":"9RX9R","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"6V52N":[function(require,module,exports) {
@@ -14052,44 +14081,43 @@ class PaginationView extends _viewDefault.default {
             const btn = e.target.closest('.btn--inline');
             if (!btn) return;
             const goToPage = +btn.dataset.goto; // equal with Number(btn.dataset.goto)
+            console.log(goToPage);
             handler(goToPage);
         });
+    }
+    _paggButtMarkup(currentPage, type) {
+        let position = type === '+' ? currentPage + 1 : currentPage - 1;
+        let paggBut = type === '+' ? [
+            'next',
+            'arrow-right'
+        ] : [
+            'prev',
+            'arrow-left'
+        ];
+        return `
+    <button data-goto='${position}' class="btn--inline pagination__btn--${paggBut[0]}">
+    <span>Page${position}</span>
+    <svg class="search__icon">
+      <use href="${_iconsSvgDefault.default}#icon-${paggBut[1]}"></use>
+      </svg>
+      </button>
+  `;
+    }
+    _paggMarkup(currentPage, numPages) {
+        // Faqa e Pare
+        if (currentPage === 1 && numPages > 1) return this._paggButtMarkup(currentPage, '+');
+        // Faqa e Fundit
+        if (currentPage === numPages && numPages > 1) return this._paggButtMarkup(currentPage, '-');
+        // Faqe te tjera
+        if (currentPage < numPages) return `${this._paggButtMarkup(currentPage, '-')}
+     ${this._paggButtMarkup(currentPage, '+')}
+     `;
+        return '';
     }
     _generateMarkup() {
         const currentPage = this._data.page;
         const numPages = Math.ceil(this._data.result.length / this._data.resultsPerPage);
-        // Faqa e Pare
-        if (currentPage === 1 && numPages > 1) return `
-            <button data-goto='${currentPage + 1}' class="btn--inline pagination__btn--next">
-            <span>Page${currentPage + 1}</span>
-            <svg class="search__icon">
-              <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>
-            </svg>
-          </button>
-            `;
-        // Faqa e Fundit
-        if (currentPage === numPages && numPages > 1) return `<button data-goto='${currentPage - 1}' class="btn--inline pagination__btn--prev">
-            <svg class="search__icon">
-              <use href="${_iconsSvgDefault.default}#icon-arrow-left"></use>
-            </svg>
-            <span>Page ${currentPage - 1}</span>
-          </button>
-        </button>
-   `;
-        // Faqe te tjera
-        if (currentPage < numPages) return `<button data-goto='${currentPage - 1}' class="btn--inline pagination__btn--prev">
-      <svg class="search__icon">
-        <use href="${_iconsSvgDefault.default}#icon-arrow-left"></use>
-      </svg>
-      <span>Page ${currentPage - 1}</span>
-    </button>
-    <button data-goto='${currentPage + 1}' class="btn--inline pagination__btn--next">
-    <span>Page${currentPage + 1}</span>
-    <svg class="search__icon">
-      <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>
-    </svg>
-  </button>`;
-        return '';
+        return this._paggMarkup(currentPage, numPages);
     }
 }
 exports.default = new PaginationView();

@@ -2,7 +2,9 @@ import { API_URL, RES_PER_PAGE } from './config.js';
 import { getJSON } from './helpers.js';
 // Important Data stay in the state:
 export const state = {
-  recipe: {},
+  recipe: {
+    servings: 4,
+  },
   search: {
     input: '',
     result: [],
@@ -13,6 +15,7 @@ export const state = {
 export const loadRecipe = async function (id) {
   try {
     const data = await getJSON(`${API_URL}${id}`);
+    console.log(data);
     const { recipe } = data;
     state.recipe = {
       id: recipe.recipe_id,
@@ -20,7 +23,7 @@ export const loadRecipe = async function (id) {
       publisher: recipe.publisher,
       sourceUrl: recipe.source_url,
       image: recipe.image_url,
-      servings: recipe.servings,
+      servings: 4, // default Value
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
@@ -54,4 +57,12 @@ export const getSearchResultPage = function (page = state.search.page) {
   const start = (state.search.page - 1) * state.search.resultsPerPage;
   const end = state.search.page * state.search.resultsPerPage;
   return state.search.result.slice(start, end);
+};
+
+export const updateServings = function (newServings) {
+  state.recipe.ingredients = state.recipe.ingredients.map(
+    ing => `${newServings / state.recipe.servings}( ${ing} )`
+  );
+
+  state.recipe.servings = newServings;
 };
