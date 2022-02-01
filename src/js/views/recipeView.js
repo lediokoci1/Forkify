@@ -10,7 +10,23 @@ class RecipeView extends View {
     this._data = data;
     const markup = this._generateMarkup();
     this._clear();
-    this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    if (markup) {
+      console.log('Ledio');
+      this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    } else {
+      console.log('else');
+      this._parentElement.insertAdjacentHTML(
+        'afterbegin',
+        `<div class="message">
+      <div>
+        <svg>
+          <use href="${icons}#icon-smile"></use>
+        </svg>
+      </div>
+      <p>Welcome to Pizza World !</p>
+      </div>`
+      );
+    }
   }
 
   _clear() {
@@ -113,9 +129,9 @@ class RecipeView extends View {
     <div class="recipe__user-generated">
     
     </div>
-    <button class="btn--round">
+    <button class="btn--round btn--bookmark">
       <svg class="">
-        <use href="${icons}#icon-bookmark-fill"></use>
+        <use href="${icons}#icon-bookmark"></use>
       </svg>
     </button>
   </div>

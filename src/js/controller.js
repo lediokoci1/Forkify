@@ -25,6 +25,10 @@ const controlRecipes = async function () {
   }
 };
 
+const controladdBookmark = function () {
+  model.addBookmark(model.state.recipe);
+  console.log(model.state.recipe);
+};
 const controllSearchResult = async function () {
   try {
     resultsView.renderSpinner();
