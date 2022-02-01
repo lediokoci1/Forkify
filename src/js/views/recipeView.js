@@ -59,11 +59,11 @@ class RecipeView extends View {
     this._parentElement.addEventListener('click', function (e) {
       const btn = e.target.closest('.btn--update-servings');
       if (!btn) return;
-      const updateTo = +btn.dataset.updateTo; // Shpjegim me poshte
+      const { updateTo } = btn.dataset; // Shpjegim me poshte
       // kur ne nje klase kemi dataset-update-to => {update-to = updateTo} 'camelCase'
-      console.log(updateTo);
-
-      handler(updateTo);
+      if (+updateTo > 0) {
+        handler(+updateTo);
+      }
     });
   }
 

@@ -14,6 +14,8 @@ const controlRecipes = async function () {
     const id = window.location.hash.slice(1);
     if (!id) return;
     recipeView.renderSpinner();
+    // Update results view to mark selected search result
+    resultsView.update(model.getSearchResultPage());
     // Load the recipe:
     await model.loadRecipe(id);
     // rendering recipe
@@ -45,7 +47,8 @@ const controlServings = function (newServings) {
   // Perditesojme perberesit e recetes ne State
   model.updateServings(newServings);
   // Perditesojme View e recetes
-  recipeView.render(model.state.recipe);
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
 };
 
 const init = function () {
