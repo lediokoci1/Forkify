@@ -4,6 +4,7 @@ import { getJSON } from './helpers.js';
 export const state = {
   recipe: {
     servings: 4,
+    bookmark: false,
   },
   search: {
     input: '',

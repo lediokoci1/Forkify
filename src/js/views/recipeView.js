@@ -10,23 +10,8 @@ class RecipeView extends View {
     this._data = data;
     const markup = this._generateMarkup();
     this._clear();
-    if (markup) {
-      console.log('Ledio');
-      this._parentElement.insertAdjacentHTML('afterbegin', markup);
-    } else {
-      console.log('else');
-      this._parentElement.insertAdjacentHTML(
-        'afterbegin',
-        `<div class="message">
-      <div>
-        <svg>
-          <use href="${icons}#icon-smile"></use>
-        </svg>
-      </div>
-      <p>Welcome to Pizza World !</p>
-      </div>`
-      );
-    }
+
+    this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
   _clear() {
@@ -82,8 +67,15 @@ class RecipeView extends View {
       }
     });
   }
-
+  addHandlerAddBookmark(handler) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--bookmark-test');
+      if (!btn) return;
+      handler();
+    });
+  }
   _generateMarkup() {
+    console.log(this._data);
     if (!this._data.ingredients) return;
     return `<figure class="recipe__fig">
     <img src="${this._data.image}" alt="Tomato" class="recipe__img" />
@@ -129,9 +121,11 @@ class RecipeView extends View {
     <div class="recipe__user-generated">
     
     </div>
-    <button class="btn--round btn--bookmark">
+    <button class="btn--round btn--bookmark-test">
       <svg class="">
-        <use href="${icons}#icon-bookmark"></use>
+        <use href="${icons}#icon-bookmark${
+      this._data.bookmark ? '-fill' : ''
+    }"></use>
       </svg>
     </button>
   </div>
