@@ -32,8 +32,9 @@ const controlAddBookmark = function () {
   } else {
     model.addBookmark(model.state.recipe);
   }
-  console.log(model.state.recipe);
   recipeView.update(model.state.recipe);
+
+  bookmarksVeiw.render(model.state.bookmarks);
 };
 
 const controllSearchResult = async function () {

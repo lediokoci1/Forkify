@@ -73,7 +73,6 @@ export const updateServings = function (newServings) {
 };
 
 export const addBookmark = function (recipe) {
-  console.log('okk');
   // add Bookmark in state
   state.bookmarks.push(recipe);
   // Mark current recipe as bookmark

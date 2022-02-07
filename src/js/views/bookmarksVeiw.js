@@ -12,15 +12,17 @@ class BookmarksView extends View {
   _generateMarkupPreview(result) {
     const id = window.location.hash.slice(1);
     return `<li class="preview">
-    <a class="preview__link" href="#23456">
+    <a class="preview__link ${
+      result.id === id ? 'preview__link--active' : ''
+    }" href="#${result.id}">
       <figure class="preview__fig">
-        <img src="src/img/test-1.jpg" alt="Test" />
+        <img src="${result.image}" alt="${result.title}" />
       </figure>
       <div class="preview__data">
-        <h4 class="preview__name">
-          Pasta with Tomato Cream ...
+        <h4 class="preview__title">
+        ${result.title}
         </h4>
-        <p class="preview__publisher">The Pioneer Woman</p>
+        <p class="preview__publisher">${result.publisher}</p>
       </div>
     </a>
   </li> 
