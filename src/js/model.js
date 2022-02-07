@@ -2,6 +2,7 @@ import { API_URL, RES_PER_PAGE } from './config.js';
 import { getJSON } from './helpers.js';
 // Important Data stay in the state:
 export const state = {
+  tempserving: 4,
   recipe: {
     servings: 4,
     bookmark: false,
@@ -16,6 +17,7 @@ export const state = {
 };
 export const loadRecipe = async function (id) {
   try {
+    this.state.tempserving = 4;
     const data = await getJSON(`${API_URL}${id}`);
     const { recipe } = data;
     state.recipe = {
@@ -66,10 +68,7 @@ export const getSearchResultPage = function (page = state.search.page) {
 };
 
 export const updateServings = function (newServings) {
-  state.recipe.ingredients = state.recipe.ingredients.map(
-    ing => `${newServings / state.recipe.servings}( ${ing} )`
-  );
-
+  state.tempserving = newServings / state.recipe.servings;
   state.recipe.servings = newServings;
 };
 

@@ -1,10 +1,11 @@
+import paginationView from './views/paginationView.js';
+import resultsView from './views/resultsView.js';
 import recipeView from './views/recipeView.js';
+import bookmarksVeiw from './views/bookmarksVeiw.js';
 import searchView from './views/searchView.js';
 import * as model from './model.js';
 import 'regenerator-runtime';
 import 'core-js/stable';
-import resultsView from './views/resultsView.js';
-import paginationView from './views/paginationView.js';
 if (module.hot) {
   module.hot.accept();
 }

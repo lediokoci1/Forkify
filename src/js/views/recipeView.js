@@ -133,7 +133,9 @@ class RecipeView extends View {
     <h2 class="heading--2">Recipe ingredients</h2>
     <ul class="recipe__ingredient-list">
       ${this._data.ingredients
-        .map(ingredient => this._generateMarkupIngredient(ingredient))
+        .map(ingredient =>
+          this._generateMarkupIngredient(ingredient, this._serving)
+        )
         .join('')}
       </ul>
       
@@ -167,7 +169,7 @@ class RecipeView extends View {
       <use href="${icons}#icon-check"></use>
     </svg>
     <div class="recipe__description">
-      ${ingredients}
+    ${this._data.servings / 4} x ${ingredients}
     </div>
   </li>`;
   }
