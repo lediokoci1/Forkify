@@ -5,12 +5,13 @@ class RecipeView extends View {
   _parentElement = document.querySelector('.recipe');
   _data;
   _errorMessage = `Sorry, We could not find the recipe. Please find another one.`;
+  _welcomeMessage = `Start by searching for a recipe or an ingredient. Have fun!`;
   _messageSucces = '';
   render(data) {
     this._data = data;
+    if (!this._data) return;
     const markup = this._generateMarkup();
     this._clear();
-
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
@@ -75,8 +76,17 @@ class RecipeView extends View {
     });
   }
   _generateMarkup() {
-    if (!this._data.ingredients) return;
-    return `<figure class="recipe__fig">
+    if (!this._data.ingredients) {
+      return `<div class="error">
+    <div>
+      <svg>
+        <use href='${icons}#icon-smile'></use>
+      </svg>
+    </div>
+    <p>${this._welcomeMessage}</p>
+  </div>`;
+    } else {
+      return `<figure class="recipe__fig">
     <img src="${this._data.image}" alt="Tomato" class="recipe__img" />
     <h1 class="recipe__title">
       <span>${this._data.title}</span>
@@ -123,8 +133,8 @@ class RecipeView extends View {
     <button class="btn--round btn--bookmark-test">
       <svg class="">
         <use href="${icons}#icon-bookmark${
-      this._data.bookmark ? '-fill' : ''
-    }"></use>
+        this._data.bookmark ? '-fill' : ''
+      }"></use>
       </svg>
     </button>
   </div>
@@ -161,6 +171,7 @@ class RecipeView extends View {
       </svg>
     </a>
   </div>`;
+    }
   }
 
   _generateMarkupIngredient(ingredients) {
