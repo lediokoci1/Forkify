@@ -73,6 +73,7 @@ const controlServings = function (newServings) {
 
 const controlAddRecipe = function (newRecipe) {
   console.log(newRecipe);
+  model.uploadRecipe(newRecipe);
 };
 
 const init = function () {
