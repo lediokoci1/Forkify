@@ -1,5 +1,5 @@
 import { API_URL, API_URL_RECIPE, RES_PER_PAGE, API_KEY } from './config.js';
-import { getJSON, sendJSON } from './helpers.js';
+import { AJAX } from './helpers.js';
 // Important Data stay in the state:
 export const state = {
   tempserving: 4,
@@ -25,12 +25,13 @@ const createRecipeObject = function (recipe) {
     servings: 4, // default Value
     cookingTime: recipe.cooking_time,
     ingredients: recipe.ingredients,
+    ...(recipe.key && { key: recipe.key }),
   };
 };
 export const loadRecipe = async function (id) {
   try {
     this.state.tempserving = 4;
-    const data = await getJSON(`${API_URL_RECIPE}${id}`);
+    const data = await AJAX(`${API_URL_RECIPE}${id}`);
 
     state.recipe = createRecipeObject(data.recipe);
 
@@ -47,7 +48,7 @@ export const loadRecipe = async function (id) {
 export const loadSearchResults = async function (input) {
   try {
     state.search.input = input;
-    const data = await getJSON(
+    const data = await AJAX(
       `https://forkify-api.herokuapp.com/api/search?q=${input}`
     );
     state.search.page = 1;
@@ -106,11 +107,13 @@ const onInit = function () {
   }
 };
 onInit();
+
 const clearBookmarks = function () {
   localStorage.clear('bookmarks');
 };
 // clearBookmarks();
 
+const ingredientsValue = function (ingredient) {};
 export const uploadRecipe = async function (newRecipe) {
   try {
     const ingredients = Object.entries(newRecipe)
@@ -135,11 +138,12 @@ export const uploadRecipe = async function (newRecipe) {
       servings: +newRecipe.servings,
       ingredients,
     };
-    const res = await sendJSON(`${API_URL}?key=${API_KEY}`, recipe);
+    const res = await AJAX(`${API_URL}?key=${API_KEY}`, recipe);
     console.log(res);
     if (res && res.data) {
       state.recipe = createRecipeObject(res.data.recipe);
     }
+    addBookmark(state.recipe);
   } catch (err) {
     throw err;
   }

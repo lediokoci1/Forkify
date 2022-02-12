@@ -3,3 +3,4 @@ export const API_URL_RECIPE = 'https://forkify-api.herokuapp.com/api/get?rId=';
 export const TIMEOUT_SEC = 10;
 export const RES_PER_PAGE = 10;
 export const API_KEY = '1eed478e-73f6-424f-843d-328f0261e32c ';
+export const MODAL_CLOSE_SECONDS = 2.5;

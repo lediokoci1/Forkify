@@ -1,6 +1,7 @@
 import paginationView from './views/paginationView.js';
 import bookmarksVeiw from './views/bookmarksVeiw.js';
 import addRecipeView from './views/addRecipeView';
+import { MODAL_CLOSE_SECONDS } from './config.js';
 import resultsView from './views/resultsView.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
@@ -26,6 +27,7 @@ const controlRecipes = async function () {
     recipeView.render(model.state.recipe);
   } catch (err) {
     recipeView.renderError();
+    throw err;
   }
 };
 
@@ -54,6 +56,7 @@ const controllSearchResult = async function () {
     resultsView.render(model.getSearchResultPage());
     paginationView.render(model.state.search);
   } catch (err) {
+    resultsView.renderError();
     throw err;
   }
 };
@@ -73,16 +76,34 @@ const controlServings = function (newServings) {
 
 const controlAddRecipe = async function (newRecipe) {
   try {
-    console.log(newRecipe);
+    // Load the spinner:
+    addRecipeView.renderSpinner();
+
     //upload the new recipe
     await model.uploadRecipe(newRecipe);
-    console.log(model.state.recipe);
+
+    // render recipeView
+    recipeView.render(model.state.recipe);
+
+    // Success message:
+    addRecipeView.renderMessage();
+
+    // render the bookmarks
+    bookmarksVeiw.render(model.state.bookmarks);
+
+    // close modal after 2.5seconds
+    setTimeout(function () {
+      // Close modal:
+      addRecipeView.toggleWindow();
+    }, MODAL_CLOSE_SECONDS * 1000);
+
+    // window.history.pushState( STATE , TITLE , URL  )
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
   } catch (err) {
-    console.log(err);
     addRecipeView.renderError(err.message);
+    throw err;
   }
 };
-
 const init = function () {
   bookmarksVeiw.addHandlerRender(controlBookmarks);
   recipeView.addHandlerRender(controlRecipes);
@@ -91,6 +112,5 @@ const init = function () {
   searchView.addHandlerSearch(controllSearchResult);
   paginationView.addHandlerClick(controlPagination);
   addRecipeView.addHandlerUpload(controlAddRecipe);
-  // recipeView.render(model.state.recipe);
 };
 init();

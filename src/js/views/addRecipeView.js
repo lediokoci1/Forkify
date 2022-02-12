@@ -3,6 +3,8 @@ import icons from 'url:../../img/icons.svg';
 
 class AddRecipeView extends View {
   _parentElement = document.querySelector('.upload');
+
+  _message = 'Recipes was succesfully uploaded';
   _window = document.querySelector('.add-recipe-window');
   _overlay = document.querySelector('.overlay');
   _btnOpen = document.querySelector('.nav__btn--add-recipe');
@@ -27,7 +29,7 @@ class AddRecipeView extends View {
   }
 
   addHandlerUpload(handler) {
-    this._parentElement.addEventListener('click', function (e) {
+    this._parentElement.addEventListener('submit', function (e) {
       e.preventDefault();
       // Funksioni me poshte merr te gjithe te dhenat e formes ku po shenjon degjuesi eventeve.
       const dataArray = [...new FormData(this)];
@@ -36,7 +38,6 @@ class AddRecipeView extends View {
       handler(data);
     });
   }
-  _generateMarkup() {}
 }
 
 export default new AddRecipeView();
