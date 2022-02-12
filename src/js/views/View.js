@@ -23,7 +23,7 @@ export default class View {
     const newDOM = document.createRange().createContextualFragment(newMarkup);
     const newElements = Array.from(newDOM.querySelectorAll('*'));
     const curElements = Array.from(this._parentElement.querySelectorAll('*'));
-    // Ndryshojme tekstin:
+    // Change the Text:
     newElements.forEach((newEl, index) => {
       const curEl = curElements[index];
       if (
@@ -32,7 +32,7 @@ export default class View {
       ) {
         curEl.textContent = newEl.textContent;
       }
-      // Ndryshojme atributet:
+      // Change the Attributes:
       if (!newEl.isEqualNode(curEl)) {
         Array.from(newEl.attributes).forEach(attr =>
           curEl.setAttribute(attr.name, attr.value)

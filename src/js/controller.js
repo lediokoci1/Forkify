@@ -67,10 +67,9 @@ const controlPagination = function (goToPage) {
 };
 
 const controlServings = function (newServings) {
-  // Perditesojme perberesit e recetes ne State
+  // Update Servings:
   model.updateServings(newServings);
-  // Perditesojme View e recetes
-  // recipeView.render(model.state.recipe);
+  // Update the view of Recipe:
   recipeView.update(model.state.recipe);
 };
 

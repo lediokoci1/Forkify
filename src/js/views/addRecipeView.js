@@ -31,9 +31,9 @@ class AddRecipeView extends View {
   addHandlerUpload(handler) {
     this._parentElement.addEventListener('submit', function (e) {
       e.preventDefault();
-      // Funksioni me poshte merr te gjithe te dhenat e formes ku po shenjon degjuesi eventeve.
+      // Funtion below get all Values from the form:
       const dataArray = [...new FormData(this)];
-      // Kthejme: Array -> Objekt
+      // Transform: Array -> Objekt
       const data = Object.fromEntries(dataArray);
       handler(data);
     });

@@ -139,7 +139,6 @@ export const uploadRecipe = async function (newRecipe) {
       ingredients,
     };
     const res = await AJAX(`${API_URL}?key=${API_KEY}`, recipe);
-    console.log(res);
     if (res && res.data) {
       state.recipe = createRecipeObject(res.data.recipe);
     }

@@ -27,15 +27,15 @@ class PaginationView extends View {
   }
 
   _paggMarkup(currentPage, numPages) {
-    // Faqa e Pare
+    // First page:
     if (currentPage === 1 && numPages > 1) {
       return this._paggButtMarkup(currentPage, '+');
     }
-    // Faqa e Fundit
+    // Last Page:
     if (currentPage === numPages && numPages > 1) {
       return this._paggButtMarkup(currentPage, '-');
     }
-    // Faqe te tjera
+    // Other Pages:
     if (currentPage < numPages) {
       return `${this._paggButtMarkup(currentPage, '-')}
      ${this._paggButtMarkup(currentPage, '+')}
