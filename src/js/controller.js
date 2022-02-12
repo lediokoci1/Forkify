@@ -15,7 +15,6 @@ if (module.hot) {
 const controlRecipes = async function () {
   try {
     const id = window.location.hash.slice(1);
-    console.log(id);
     if (!id) return;
     recipeView.renderSpinner();
     bookmarksVeiw.update(model.state.bookmarks);
@@ -85,6 +84,6 @@ const init = function () {
   searchView.addHandlerSearch(controllSearchResult);
   paginationView.addHandlerClick(controlPagination);
   addRecipeView.addHandlerUpload(controlAddRecipe);
-  recipeView.render(model.state.recipe);
+  // recipeView.render(model.state.recipe);
 };
 init();
