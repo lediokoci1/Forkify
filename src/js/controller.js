@@ -71,9 +71,16 @@ const controlServings = function (newServings) {
   recipeView.update(model.state.recipe);
 };
 
-const controlAddRecipe = function (newRecipe) {
-  console.log(newRecipe);
-  model.uploadRecipe(newRecipe);
+const controlAddRecipe = async function (newRecipe) {
+  try {
+    console.log(newRecipe);
+    //upload the new recipe
+    await model.uploadRecipe(newRecipe);
+    console.log(model.state.recipe);
+  } catch (err) {
+    console.log(err);
+    addRecipeView.renderError(err.message);
+  }
 };
 
 const init = function () {
