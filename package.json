@@ -2,7 +2,6 @@
   "name": "receta-gatimi",
   "version": "2.2.0",
   "description": "Receta Gatimi",
-  "main": "index.js",
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html"
