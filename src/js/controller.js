@@ -15,6 +15,7 @@ if (module.hot) {
 const controlRecipes = async function () {
   try {
     const id = window.location.hash.slice(1);
+    console.log(id);
     if (!id) return;
     recipeView.renderSpinner();
     bookmarksVeiw.update(model.state.bookmarks);
