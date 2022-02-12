@@ -18,7 +18,9 @@ export const state = {
 export const loadRecipe = async function (id) {
   try {
     this.state.tempserving = 4;
-    const data = await getJSON(`${API_URL}${id}`);
+    const data = await getJSON(
+      `https://forkify-api.herokuapp.com/api/get?rId=${id}`
+    );
     console.log(data);
     const { recipe } = data;
     state.recipe = {
