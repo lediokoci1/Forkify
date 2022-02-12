@@ -18,10 +18,7 @@ export const state = {
 export const loadRecipe = async function (id) {
   try {
     this.state.tempserving = 4;
-    const data = await getJSON(
-      `https://forkify-api.herokuapp.com/api/get?rId=${id}`
-    );
-    console.log(data);
+    const data = await getJSON(`${API_URL}${id}`);
     const { recipe } = data;
     state.recipe = {
       id: recipe.recipe_id,
@@ -67,7 +64,7 @@ export const getSearchResultPage = function (page = state.search.page) {
   state.search.page = page;
   const start = (state.search.page - 1) * state.search.resultsPerPage;
   const end = state.search.page * state.search.resultsPerPage;
-  return state.search.result.slice(start, end);
+  return state.search.result.slice(start, end - 1);
 };
 
 export const updateServings = function (newServings) {
