@@ -24,6 +24,7 @@ const controlRecipes = async function () {
     bookmarksVeiw.update(model.state.bookmarks);
     // Load the recipe:
     await model.loadRecipe(id);
+    console.log(model.state.recipe);
     // rendering recipe
     recipeView.render(model.state.recipe);
   } catch (err) {
