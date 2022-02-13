@@ -49,6 +49,7 @@ export const loadRecipe = async function (id) {
       state.recipe.bookmark = false;
     }
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
