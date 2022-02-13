@@ -16,18 +16,19 @@ if (module.hot) {
 const controlRecipes = async function () {
   try {
     const id = window.location.hash.slice(1);
+    console.log(id);
     if (!id) return;
     recipeView.renderSpinner();
-    bookmarksVeiw.update(model.state.bookmarks);
     // Update results view to mark selected search result
     resultsView.update(model.getSearchResultPage());
+
+    bookmarksVeiw.update(model.state.bookmarks);
     // Load the recipe:
     await model.loadRecipe(id);
     // rendering recipe
     recipeView.render(model.state.recipe);
   } catch (err) {
     recipeView.renderError();
-    throw err;
   }
 };
 
@@ -42,7 +43,7 @@ const controlAddBookmark = function () {
     model.addBookmark(model.state.recipe);
   }
   recipeView.update(model.state.recipe);
-
+  console.log(model.state.bookmarks);
   bookmarksVeiw.render(model.state.bookmarks);
 };
 

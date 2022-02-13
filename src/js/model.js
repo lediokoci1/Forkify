@@ -30,18 +30,28 @@ const createRecipeObject = function (recipe) {
 };
 export const loadRecipe = async function (id) {
   try {
+    console.log(id);
     this.state.tempserving = 4;
     const data = await AJAX(`${API_URL_RECIPE}${id}`);
-
-    state.recipe = createRecipeObject(data.recipe);
-
+    console.log(data);
+    state.recipe = {
+      id: data.recipe_id,
+      title: data.title,
+      publisher: data.publisher,
+      sourceUrl: data.source_url,
+      image: data.image_url,
+      servings: 4, // default Value
+      cookingTime: data.cooking_time,
+      ingredients: data.ingredients,
+    };
     if (state.bookmarks.some(b => b.id === id)) {
       state.recipe.bookmark = true;
     } else {
       state.recipe.bookmark = false;
     }
   } catch (error) {
-    throw err;
+    console.log(error.message);
+    throw error;
   }
 };
 
@@ -81,6 +91,7 @@ const persistBookmarks = function () {
   localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
 };
 export const addBookmark = function (recipe) {
+  console.log(recipe);
   // add Bookmark in state
   state.bookmarks.push(recipe);
   // Mark current recipe as bookmark
@@ -113,7 +124,6 @@ const clearBookmarks = function () {
 };
 // clearBookmarks();
 
-const ingredientsValue = function (ingredient) {};
 export const uploadRecipe = async function (newRecipe) {
   try {
     const ingredients = Object.entries(newRecipe)
