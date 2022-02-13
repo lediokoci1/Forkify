@@ -16,7 +16,6 @@ if (module.hot) {
 const controlRecipes = async function () {
   try {
     const id = window.location.hash.slice(1);
-    console.log(id);
     if (!id) return;
     recipeView.renderSpinner();
     // Update results view to mark selected search result
@@ -37,13 +36,13 @@ const controlBookmarks = function () {
 };
 
 const controlAddBookmark = function () {
+  debugger;
   if (model.state.recipe.bookmark) {
     model.removeBookmark(model.state.recipe.id);
   } else {
     model.addBookmark(model.state.recipe);
   }
   recipeView.update(model.state.recipe);
-  console.log(model.state.bookmarks);
   bookmarksVeiw.render(model.state.bookmarks);
 };
 
